@@ -18,16 +18,45 @@ const subZero = {
     },
 };
 
+const sonya = {
+    name: 'Sonya Blade',
+    hp: 100,
+    img: 'http://reactmarathon-api.herokuapp.com/assets/sonya.gif',
+    weapon: ['weapon1', 'weapon2', 'weapon3'],
+    attack: function() {
+        console.log(this.name + ' Fight...')
+    },
+};
+
+const liuKang = {
+    name: 'Liu Kang',
+    hp: 100,
+    img: 'http://reactmarathon-api.herokuapp.com/assets/liukang.gif',
+    weapon: ['weapon1', 'weapon2', 'weapon3'],
+    attack: function() {
+        console.log(this.name + ' Fight...')
+    },
+};
+
+const kitana = {
+    name: 'Kitana',
+    hp: 100,
+    img: 'http://reactmarathon-api.herokuapp.com/assets/kitana.gif',
+    weapon: ['weapon1', 'weapon2', 'weapon3'],
+    attack: function() {
+        console.log(this.name + ' Fight...')
+    },
+};
+
+const createElem = (cl, tag, parent) => {
+    const elem = document.createElement(tag);
+    parent.appendChild(elem);
+    if (cl.length !== 0) {
+        elem.classList.add(cl);
+    }
+};
 
 function createPlayer(htmlClass, obj) {
-    
-    const createElem = (cl, tag, parent) => {
-        const elem = document.createElement(tag);
-        parent.appendChild(elem);
-        if (cl.length !== 0) {
-            elem.classList.add(cl);
-        }
-    }
     
     const $arenas = document.querySelector('.arenas');
     createElem(htmlClass, 'div', $arenas);
@@ -53,5 +82,5 @@ function createPlayer(htmlClass, obj) {
     $img.src = obj.img;
 };
 
-createPlayer('player1', scorpion);
-createPlayer('player2', subZero);
+createPlayer('player1', kitana);
+createPlayer('player2', liuKang);
