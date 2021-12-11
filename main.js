@@ -87,12 +87,9 @@ function createPlayer(obj) {
 
 const changeHP = (player) => {
     const $playerLife = document.querySelector('.player' + player.player + ' .life');
-    player.hp -= Math.ceil(Math.random() * 20);
-    if (player.hp > 0) {
-        $playerLife.style.width = player.hp + '%';
-    } else {
-        $playerLife.style.width = 0;
-    }
+    const damage = Math.ceil(Math.random() * 20);
+    player.hp > damage ? player.hp -= damage : player.hp = 0;
+    $playerLife.style.width = player.hp + '%';
 };
 
 const playerWin = (name) => {
@@ -103,8 +100,8 @@ const playerWin = (name) => {
 };
 
 $randomButton.addEventListener('click', function() {
-    changeHP(scorpion);
     changeHP(kitana);
+    changeHP(scorpion);
     if (scorpion.hp <= 0 && kitana.hp > 0) {
         $arenas.appendChild(playerWin(kitana.name));
         $randomButton.disabled = true;
@@ -112,7 +109,7 @@ $randomButton.addEventListener('click', function() {
         $arenas.appendChild(playerWin(scorpion.name));
         $randomButton.disabled = true;
     } else if (kitana.hp <= 0 && scorpion.hp <= 0) {
-        kitana.hp > scorpion.hp ? $arenas.appendChild(playerWin(kitana.name)) : $arenas.appendChild(playerWin(scorpion.name));
+        $arenas.appendChild(playerWin('nobody'));
         $randomButton.disabled = true;
     } else {
         $randomButton.disabled = false;
