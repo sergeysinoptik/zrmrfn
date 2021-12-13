@@ -142,8 +142,21 @@ function showResult(player, enemy) {
 function disableButton(player, enemy) {
     if (player.hp === 0 || enemy.hp === 0) {
         $randomButton.disabled = true;
+        return true;
     }
+    return false;
 };
+
+function createReloadButton() {
+    const $reloadWrap = createElem('div', 'reloadWrap');
+    const $reloadButton = createElem('button', 'button');
+    $reloadButton.innerText = 'Restart';
+    $reloadWrap.appendChild($reloadButton);
+    $reloadButton.addEventListener('click', function() {
+        window.location.reload();
+    })
+    return $reloadWrap;
+}
 
 $randomButton.addEventListener('click', function() {
     kitana.changeHP(random(20));
@@ -154,7 +167,14 @@ $randomButton.addEventListener('click', function() {
     scorpion.renderHP();
     disableButton(kitana, scorpion);
     showResult(kitana, scorpion);
+    if (disableButton(kitana, scorpion)) {
+        $arenas.appendChild(createReloadButton());
+    };
 });
+
+
+
+
 
 $arenas.appendChild(createPlayer(kitana));
 $arenas.appendChild(createPlayer(scorpion));
