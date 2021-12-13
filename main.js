@@ -21,6 +21,7 @@ const subZero = {
 };
 
 const sonya = {
+    player: 1,
     name: 'Sonya Blade',
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/sonya.gif',
@@ -31,6 +32,7 @@ const sonya = {
 };
 
 const liuKang = {
+    player: 2,
     name: 'Liu Kang',
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/liukang.gif',
@@ -85,9 +87,11 @@ function createPlayer(obj) {
     return $player;
 };
 
+const random = (num) => Math.ceil(Math.random() * num);
+
 const changeHP = (player) => {
     const $playerLife = document.querySelector('.player' + player.player + ' .life');
-    const damage = Math.ceil(Math.random() * 20);
+    const damage = random(20);
     player.hp > damage ? player.hp -= damage : player.hp = 0;
     $playerLife.style.width = player.hp + '%';
 };
@@ -99,24 +103,28 @@ const playerWin = (name) => {
     return $loseTitle;
 };
 
-$randomButton.addEventListener('click', function() {
-    changeHP(kitana);
-    changeHP(scorpion);
-    if (scorpion.hp <= 0 && kitana.hp > 0) {
-        $arenas.appendChild(playerWin(kitana.name));
+function disableButton(player, enemy) {
+    if (player.hp <= 0 && enemy.hp > 0) {
+        $arenas.appendChild(playerWin(enemy.name));
         $randomButton.disabled = true;
-    } else if (kitana.hp <= 0 && scorpion.hp > 0) {
-        $arenas.appendChild(playerWin(scorpion.name));
+    } else if (enemy.hp <= 0 && player.hp > 0) {
+        $arenas.appendChild(playerWin(player.name));
         $randomButton.disabled = true;
-    } else if (kitana.hp <= 0 && scorpion.hp <= 0) {
+    } else if (enemy.hp <= 0 && player.hp <= 0) {
         $arenas.appendChild(playerWin('nobody'));
         $randomButton.disabled = true;
     } else {
         $randomButton.disabled = false;
     }
+}
+
+$randomButton.addEventListener('click', function() {
+    changeHP(kitana);
+    changeHP(scorpion);
+    disableButton(kitana, scorpion);
 });
 
 $arenas.appendChild(createPlayer(kitana));
 $arenas.appendChild(createPlayer(scorpion));
 
-document.onload = $arenas.classList.add('arena' + Math.ceil(Math.random() * 4));
+document.onload = $arenas.classList.add('arena' + random(4));
