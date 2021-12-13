@@ -1,38 +1,5 @@
-function createPlayer(htmlClass, obj) {
-    
-    const $arenas = document.querySelector('.arenas');
-    createElem(htmlClass, 'div', $arenas);
-    
-    const $player = document.querySelector('.' + htmlClass);
-    createElem('progressbar', 'div', $player);
-    createElem('character', 'div', $player);
-
-    const $progressbar = $player.querySelector('.progressbar');
-    createElem('life', 'div', $progressbar);
-    createElem('name', 'div', $progressbar);
-
-    const $character = $player.querySelector('.character');
-    createElem('', 'img', $character);
-    
-    const $life = $progressbar.querySelector('.life');
-    $life.style.width = obj.hp + '%';
-
-    const $name = $progressbar.querySelector('.name');
-    $name.innerText = obj.name;
-
-    const $img = $character.querySelector('img');
-    $img.src = obj.img;
-};
-
-const createElem = (cl, tag, parent) => {
-    const elem = document.createElement(tag);
-    parent.appendChild(elem);
-    if (cl.length !== 0) {
-        elem.classList.add(cl);
-    }
-};
-
 const scorpion = {
+    player: 2,
     name: 'Scorpion',
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
@@ -43,6 +10,7 @@ const scorpion = {
 };
 
 const subZero = {
+    player: 2,
     name: 'Sub-Zero',
     hp: 30,
     img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
@@ -53,6 +21,7 @@ const subZero = {
 };
 
 const sonya = {
+    player: 1,
     name: 'Sonya Blade',
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/sonya.gif',
@@ -63,6 +32,7 @@ const sonya = {
 };
 
 const liuKang = {
+    player: 2,
     name: 'Liu Kang',
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/liukang.gif',
@@ -73,6 +43,7 @@ const liuKang = {
 };
 
 const kitana = {
+    player: 1,
     name: 'Kitana',
     hp: 100,
     img: 'http://reactmarathon-api.herokuapp.com/assets/kitana.gif',
@@ -82,5 +53,78 @@ const kitana = {
     },
 };
 
-createPlayer('player1', kitana);
-createPlayer('player2', liuKang);
+const $arenas = document.querySelector('.arenas');
+const $randomButton = document.querySelector('.button');
+
+const createElem = (tagName, className) => {
+    const element = document.createElement(tagName);
+    if (className) {
+        element.classList.add(className);
+    }
+    return element;
+};
+
+function createPlayer(obj) {
+    const $player = createElem('div', 'player' + obj.player);
+    const $progressbar = createElem('div', 'progressbar');
+    const $character = createElem('div', 'character');
+    const $life = createElem('div', 'life');
+    const $name = createElem('div', 'name');
+    const $img = createElem('img');
+    
+    $life.style.width = obj.hp + '%';
+    $name.innerText = obj.name;
+    $img.src = obj.img;
+
+    $progressbar.appendChild($name);
+    $progressbar.appendChild($life);
+
+    $character.appendChild($img);
+
+    $player.appendChild($progressbar);
+    $player.appendChild($character);
+
+    return $player;
+};
+
+const random = (num) => Math.ceil(Math.random() * num);
+
+const changeHP = (player) => {
+    const $playerLife = document.querySelector('.player' + player.player + ' .life');
+    const damage = random(20);
+    player.hp > damage ? player.hp -= damage : player.hp = 0;
+    $playerLife.style.width = player.hp + '%';
+};
+
+const playerWin = (name) => {
+    const $loseTitle = createElem('div', 'loseTitle');
+    $loseTitle.innerText = name + ' win';
+
+    return $loseTitle;
+};
+
+function disableButton(player, enemy) {
+    if (player.hp <= 0 && enemy.hp > 0) {
+        $arenas.appendChild(playerWin(enemy.name));
+        $randomButton.disabled = true;
+    } else if (enemy.hp <= 0 && player.hp > 0) {
+        $arenas.appendChild(playerWin(player.name));
+        $randomButton.disabled = true;
+    } else if (enemy.hp <= 0 && player.hp <= 0) {
+        $arenas.appendChild(playerWin('nobody'));
+        $randomButton.disabled = true;
+    } else {
+        $randomButton.disabled = false;
+    }
+}
+
+$randomButton.addEventListener('click', function() {
+    changeHP(kitana);
+    changeHP(scorpion);
+    disableButton(kitana, scorpion);
+});
+
+$arenas.appendChild(createPlayer(kitana));
+$arenas.appendChild(createPlayer(scorpion));
+
+document.onload = $arenas.classList.add('arena' + random(4));
