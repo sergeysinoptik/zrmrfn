@@ -56,7 +56,7 @@ const kitana = {
 const $arenas = document.querySelector('.arenas');
 const $randomButton = document.querySelector('.button');
 
-const createElem = (tagName, className) => {
+function createElem(tagName, className) {
     const element = document.createElement(tagName);
     if (className) {
         element.classList.add(className);
@@ -89,39 +89,46 @@ function createPlayer(obj) {
 
 const random = (num) => Math.ceil(Math.random() * num);
 
-const changeHP = (player) => {
+function changeHP(player) {
     const $playerLife = document.querySelector('.player' + player.player + ' .life');
     const damage = random(20);
     player.hp > damage ? player.hp -= damage : player.hp = 0;
     $playerLife.style.width = player.hp + '%';
 };
 
-const playerWin = (name) => {
+function playerWin(name) {
     const $loseTitle = createElem('div', 'loseTitle');
-    $loseTitle.innerText = name + ' win';
-
+    if(!name) {
+        $loseTitle.innerText = 'dead hit';
+    } else {
+        $loseTitle.innerText = name + ' win';
+    }
     return $loseTitle;
 };
 
-function disableButton(player, enemy) {
-    if (player.hp <= 0 && enemy.hp > 0) {
+function showResult(player, enemy) {
+    if (player.hp === 0 && enemy.hp > 0) {
         $arenas.appendChild(playerWin(enemy.name));
-        $randomButton.disabled = true;
-    } else if (enemy.hp <= 0 && player.hp > 0) {
-        $arenas.appendChild(playerWin(player.name));
-        $randomButton.disabled = true;
-    } else if (enemy.hp <= 0 && player.hp <= 0) {
-        $arenas.appendChild(playerWin('nobody'));
-        $randomButton.disabled = true;
-    } else {
-        $randomButton.disabled = false;
     }
-}
+    if (enemy.hp === 0 && player.hp > 0) {
+        $arenas.appendChild(playerWin(player.name));
+    }
+    if (enemy.hp <= 0 && player.hp <= 0) {
+        $arenas.appendChild(playerWin());
+    }
+};
+
+function disableButton(player, enemy) {
+    if (player.hp === 0 || enemy.hp === 0) {
+        $randomButton.disabled = true;
+    }
+};
 
 $randomButton.addEventListener('click', function() {
     changeHP(kitana);
     changeHP(scorpion);
     disableButton(kitana, scorpion);
+    showResult(kitana, scorpion);
 });
 
 $arenas.appendChild(createPlayer(kitana));
