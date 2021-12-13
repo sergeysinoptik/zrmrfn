@@ -7,6 +7,9 @@ const scorpion = {
     attack: function() {
         console.log(this.name + ' Fight...')
     },
+    changeHP: changeHP,
+    elHP: elHP,
+    renderHP: renderHP,
 };
 
 const subZero = {
@@ -18,6 +21,9 @@ const subZero = {
     attack: function() {
         console.log(this.name + ' Fight...')
     },
+    changeHP: changeHP,
+    elHP: elHP,
+    renderHP: renderHP,
 };
 
 const sonya = {
@@ -29,6 +35,9 @@ const sonya = {
     attack: function() {
         console.log(this.name + ' Fight...')
     },
+    changeHP: changeHP,
+    elHP: elHP,
+    renderHP: renderHP,
 };
 
 const liuKang = {
@@ -40,6 +49,9 @@ const liuKang = {
     attack: function() {
         console.log(this.name + ' Fight...')
     },
+    changeHP: changeHP,
+    elHP: elHP,
+    renderHP: renderHP,
 };
 
 const kitana = {
@@ -51,6 +63,9 @@ const kitana = {
     attack: function() {
         console.log(this.name + ' Fight...')
     },
+    changeHP: changeHP,
+    elHP: elHP,
+    renderHP: renderHP,
 };
 
 const $arenas = document.querySelector('.arenas');
@@ -89,11 +104,17 @@ function createPlayer(obj) {
 
 const random = (num) => Math.ceil(Math.random() * num);
 
-function changeHP(player) {
-    const $playerLife = document.querySelector('.player' + player.player + ' .life');
-    const damage = random(20);
-    player.hp > damage ? player.hp -= damage : player.hp = 0;
-    $playerLife.style.width = player.hp + '%';
+function changeHP(num) {
+    this.hp > num ? this.hp -= num : this.hp = 0;
+};
+
+function elHP() {
+    return document.querySelector('.player' + this.player + ' .life');
+};
+
+function renderHP() {
+    const $playerLife = this.elHP();
+    $playerLife.style.width = this.hp + '%';
 };
 
 function playerWin(name) {
@@ -125,8 +146,12 @@ function disableButton(player, enemy) {
 };
 
 $randomButton.addEventListener('click', function() {
-    changeHP(kitana);
-    changeHP(scorpion);
+    kitana.changeHP(random(20));
+    scorpion.changeHP(random(20));
+    kitana.elHP();
+    scorpion.elHP();
+    kitana.renderHP();
+    scorpion.renderHP();
     disableButton(kitana, scorpion);
     showResult(kitana, scorpion);
 });
