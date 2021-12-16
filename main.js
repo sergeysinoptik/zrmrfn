@@ -105,7 +105,7 @@ function createPlayer(obj) {
 const random = (num) => Math.ceil(Math.random() * num);
 
 function changeHP(num) {
-    this.hp > num ? this.hp -= num : this.hp = 0;
+    this.hp = this.hp > num ? this.hp - num : 0;
 };
 
 function elHP() {
@@ -134,7 +134,7 @@ function showResult(player, enemy) {
     if (enemy.hp === 0 && player.hp > 0) {
         $arenas.appendChild(playerWin(player.name));
     }
-    if (enemy.hp <= 0 && player.hp <= 0) {
+    if (enemy.hp === 0 && player.hp === 0) {
         $arenas.appendChild(playerWin());
     }
 };
@@ -161,8 +161,6 @@ function createReloadButton() {
 $randomButton.addEventListener('click', function() {
     kitana.changeHP(random(20));
     scorpion.changeHP(random(20));
-    kitana.elHP();
-    scorpion.elHP();
     kitana.renderHP();
     scorpion.renderHP();
     disableButton(kitana, scorpion);
@@ -171,10 +169,6 @@ $randomButton.addEventListener('click', function() {
         $arenas.appendChild(createReloadButton());
     };
 });
-
-
-
-
 
 $arenas.appendChild(createPlayer(kitana));
 $arenas.appendChild(createPlayer(scorpion));
