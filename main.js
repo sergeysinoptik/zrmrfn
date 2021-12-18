@@ -186,8 +186,7 @@ function enemyAttack() {
     }
 }
 
-$formFight.addEventListener('submit', function(e) {
-    e.preventDefault();
+function attack() {
     const enemy = enemyAttack();
     
     const attack = {};
@@ -208,6 +207,13 @@ $formFight.addEventListener('submit', function(e) {
     if (enemy.defence !== attack.hit) {
         player2.changeHP(attack.value);
     }
+};
+
+$formFight.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    attack();
+    
     player1.renderHP();
     player2.renderHP();
     disableForm(player1, player2);
