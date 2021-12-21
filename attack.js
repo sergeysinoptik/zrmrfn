@@ -10,24 +10,22 @@ const HIT = {
 
 const ATTACK = ['head', 'body', 'foot'];
 
-export function enemyAttack() {
+export const enemyAttack = () => {
     const hit = ATTACK[random(3) - 1];
     const defence = ATTACK[random(3) - 1];
     
     return {
-        //value: 100,
         value: random(HIT[hit]),
         hit,
         defence,
     }
 };
 
-export function playerAttack() {
+export const playerAttack = () => {
     const attack = {};
     for (let item of $formFight) {
         if (item.checked && item.name === 'hit') {
             attack.value = random(HIT[item.value]);
-            //attack.value = 100;
             attack.hit = item.value;
         }
         if (item.checked && item.name === 'defence') {
@@ -39,7 +37,7 @@ export function playerAttack() {
     return attack;
 };
 
-export function kick(player, enemy) {
+export const kick = (player, enemy) => {
     if (enemy.hit !== player.defence) {
         player1.changeHP(enemy.value);
         generateLogs('hit', player1, player2, enemy.value);

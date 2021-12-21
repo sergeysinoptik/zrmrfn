@@ -11,10 +11,6 @@ const $arenas = document.querySelector('.arenas');
 $arenas.appendChild(createPlayer(player1, 1));
 $arenas.appendChild(createPlayer(player2, 2));
 
-
-
-
-
 $formFight.addEventListener('submit', function(e) {
     e.preventDefault();
 

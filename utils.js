@@ -2,14 +2,14 @@ export const random = (num) => Math.ceil(Math.random() * num);
 
 export const $formFight = document.querySelector('.control');
 
-export function getCurrentTime() {
+export const getCurrentTime = () => {
     const date = new Date();
     const normalize = (num) => (num.toString().length > 1 ? num : `0${num}`);
     const time = `${normalize(date.getHours())}:${normalize(date.getMinutes())}:${normalize(date.getSeconds())}`;
     return time;
 };
 
-export function createElem(tagName, className) {
+export const createElem = (tagName, className) => {
     const element = document.createElement(tagName);
     if (className) {
         element.classList.add(className);
@@ -17,7 +17,7 @@ export function createElem(tagName, className) {
     return element;
 };
 
-export function createReloadButton() {
+export const createReloadButton = () => {
     const $reloadWrap = createElem('div', 'reloadWrap');
     const $reloadButton = createElem('button', 'button');
     $reloadButton.innerText = 'Restart';
@@ -28,7 +28,7 @@ export function createReloadButton() {
     return $reloadWrap;
 };
 
-export function disableForm(player, enemy) {
+export const disableForm = (player, enemy) => {
     if (player.hp === 0 || enemy.hp === 0) {
         $formFight.style.display = 'none';
         return true;
