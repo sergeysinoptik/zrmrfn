@@ -1,78 +1,5 @@
 import { random, getCurrentTime, createElem } from './utils.js';
-
-const fighters = {
-    kitana: {
-        name: 'Kitana',
-        hp: 100,
-        img: 'http://reactmarathon-api.herokuapp.com/assets/kitana.gif',
-        weapon: ['weapon1', 'weapon2', 'weapon3'],
-        attack: function() {
-            console.log(this.name + ' Fight...')
-        },
-        changeHP,
-        elHP,
-        renderHP,
-    },
-    liukang: {
-        name: 'Liu Kang',
-        hp: 100,
-        img: 'http://reactmarathon-api.herokuapp.com/assets/liukang.gif',
-        weapon: ['weapon1', 'weapon2', 'weapon3'],
-        attack: function() {
-            console.log(this.name + ' Fight...')
-        },
-        changeHP,
-        elHP,
-        renderHP,
-    },
-    sonya: {
-        name: 'Sonya Blade',
-        hp: 100,
-        img: 'http://reactmarathon-api.herokuapp.com/assets/sonya.gif',
-        weapon: ['weapon1', 'weapon2', 'weapon3'],
-        attack: function() {
-            console.log(this.name + ' Fight...')
-        },
-        changeHP: changeHP,
-        elHP: elHP,
-        renderHP: renderHP,
-    },
-    subzero: {
-        name: 'Sub-Zero',
-        hp: 100,
-        img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
-        weapon: ['weapon1', 'weapon2', 'weapon3'],
-        attack: function() {
-            console.log(this.name + ' Fight...')
-        },
-        changeHP: changeHP,
-        elHP: elHP,
-        renderHP: renderHP,
-    },
-    scorpion: {
-        name: 'Scorpion',
-        hp: 100,
-        img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
-        weapon: ['weapon1', 'weapon2', 'weapon3'],
-        attack: function() {
-            console.log(this.name + ' Fight...')
-        },
-        changeHP: changeHP,
-        elHP: elHP,
-        renderHP: renderHP,
-    },
-};
-
-let fightersNames = Object.keys(fighters);
-
-const player1Name = fightersNames[random(fightersNames.length - 1)];
-
-fightersNames = fightersNames.filter((i) => i !== player1Name);
-
-const player2Name = fightersNames[random(fightersNames.length - 1)];
-
-const player1 = fighters[player1Name];
-const player2 = fighters[player2Name];
+import { fighters, createPlayer, player1, player2 } from './fighters.js';
 
 player1.player = 1;
 player2.player = 2;
@@ -89,41 +16,13 @@ const HIT = {
 
 const ATTACK = ['head', 'body', 'foot'];
 
-function createPlayer(obj, num) {
-    const $player = createElem('div', 'player' + num);
-    const $progressbar = createElem('div', 'progressbar');
-    const $character = createElem('div', 'character');
-    const $life = createElem('div', 'life');
-    const $name = createElem('div', 'name');
-    const $img = createElem('img');
-    
-    $life.style.width = obj.hp + '%';
-    $name.innerText = obj.name;
-    $img.src = obj.img;
 
-    $progressbar.appendChild($name);
-    $progressbar.appendChild($life);
 
-    $character.appendChild($img);
 
-    $player.appendChild($progressbar);
-    $player.appendChild($character);
 
-    return $player;
-};
 
-function changeHP(num) {
-    this.hp = this.hp > num ? this.hp - num : 0;
-};
 
-function elHP() {
-    return document.querySelector('.player' + this.player + ' .life');
-};
 
-function renderHP() {
-    const $playerLife = this.elHP();
-    $playerLife.style.width = this.hp + '%';
-};
 
 function playerWin(name) {
     const $loseTitle = createElem('div', 'loseTitle');
@@ -146,7 +45,7 @@ function showResult(player, enemy) {
     }
     if (enemy.hp === 0 && player.hp === 0) {
         $arenas.appendChild(playerWin());
-        generateLogs('draw');
+        generateLogs('draw', player, enemy);
     }
 };
 
@@ -216,11 +115,13 @@ function generateLogs(type, player1, player2, currentAttack) {
     const time = `${getCurrentTime()} `;
     const attack = ` -${currentAttack}, [${player1.hp}/100]`;
     let text = '';
-    if (type === 'start' || type === 'draw') {
+    if (type === 'start') {
         text = logs[type]
         .replace('[player1]', player1.name)
         .replace('[player2]', player2.name)
         .replace('[time]', time);
+    } else if (type === 'draw') {
+        text = logs[type];
     } else {
         text = logs[type][random(logs[type].length) - 1]
         .replace('[playerKick]', player1.name)
@@ -256,6 +157,7 @@ function enemyAttack() {
     const defence = ATTACK[random(3) - 1];
     
     return {
+        //value: 100,
         value: random(HIT[hit]),
         hit,
         defence,
@@ -268,6 +170,7 @@ function playerAttack() {
     for (let item of $formFight) {
         if (item.checked && item.name === 'hit') {
             attack.value = random(HIT[item.value]);
+            //attack.value = 100;
             attack.hit = item.value;
         }
 
