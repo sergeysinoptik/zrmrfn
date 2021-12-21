@@ -1,79 +1,72 @@
-const scorpion = {
-    player: 2,
-    name: 'Scorpion',
-    hp: 100,
-    img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
-    weapon: ['weapon1', 'weapon2', 'weapon3'],
-    attack: function() {
-        console.log(this.name + ' Fight...')
+const characters = {
+    kitana: {
+        name: 'Kitana',
+        hp: 100,
+        img: 'http://reactmarathon-api.herokuapp.com/assets/kitana.gif',
+        weapon: ['weapon1', 'weapon2', 'weapon3'],
+        attack: function() {
+            console.log(this.name + ' Fight...')
+        },
+        changeHP,
+        elHP,
+        renderHP,
     },
-    changeHP: changeHP,
-    elHP: elHP,
-    renderHP: renderHP,
-};
-
-const subZero = {
-    player: 2,
-    name: 'Sub-Zero',
-    hp: 30,
-    img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
-    weapon: ['weapon1', 'weapon2', 'weapon3'],
-    attack: function() {
-        console.log(this.name + ' Fight...')
+    liukang: {
+        name: 'Liu Kang',
+        hp: 100,
+        img: 'http://reactmarathon-api.herokuapp.com/assets/liukang.gif',
+        weapon: ['weapon1', 'weapon2', 'weapon3'],
+        attack: function() {
+            console.log(this.name + ' Fight...')
+        },
+        changeHP,
+        elHP,
+        renderHP,
     },
-    changeHP: changeHP,
-    elHP: elHP,
-    renderHP: renderHP,
-};
-
-const sonya = {
-    player: 1,
-    name: 'Sonya Blade',
-    hp: 100,
-    img: 'http://reactmarathon-api.herokuapp.com/assets/sonya.gif',
-    weapon: ['weapon1', 'weapon2', 'weapon3'],
-    attack: function() {
-        console.log(this.name + ' Fight...')
+    sonya: {
+        name: 'Sonya Blade',
+        hp: 100,
+        img: 'http://reactmarathon-api.herokuapp.com/assets/sonya.gif',
+        weapon: ['weapon1', 'weapon2', 'weapon3'],
+        attack: function() {
+            console.log(this.name + ' Fight...')
+        },
+        changeHP: changeHP,
+        elHP: elHP,
+        renderHP: renderHP,
     },
-    changeHP: changeHP,
-    elHP: elHP,
-    renderHP: renderHP,
-};
-
-const liuKang = {
-    player: 2,
-    name: 'Liu Kang',
-    hp: 100,
-    img: 'http://reactmarathon-api.herokuapp.com/assets/liukang.gif',
-    weapon: ['weapon1', 'weapon2', 'weapon3'],
-    attack: function() {
-        console.log(this.name + ' Fight...')
+    subzero: {
+        name: 'Sub-Zero',
+        hp: 100,
+        img: 'http://reactmarathon-api.herokuapp.com/assets/subzero.gif',
+        weapon: ['weapon1', 'weapon2', 'weapon3'],
+        attack: function() {
+            console.log(this.name + ' Fight...')
+        },
+        changeHP: changeHP,
+        elHP: elHP,
+        renderHP: renderHP,
     },
-    changeHP,
-    elHP,
-    renderHP,
-};
-
-const kitana = {
-    player: 1,
-    name: 'Kitana',
-    hp: 100,
-    img: 'http://reactmarathon-api.herokuapp.com/assets/kitana.gif',
-    weapon: ['weapon1', 'weapon2', 'weapon3'],
-    attack: function() {
-        console.log(this.name + ' Fight...')
+    scorpion: {
+        name: 'Scorpion',
+        hp: 100,
+        img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
+        weapon: ['weapon1', 'weapon2', 'weapon3'],
+        attack: function() {
+            console.log(this.name + ' Fight...')
+        },
+        changeHP: changeHP,
+        elHP: elHP,
+        renderHP: renderHP,
     },
-    changeHP,
-    elHP,
-    renderHP,
 };
+const random = (num) => Math.ceil(Math.random() * num);
 
+let charactersNames = Object.keys(characters);
 
-const player1 = sonya;
-const player2 = kitana;
+const player1 = characters[charactersNames[random(charactersNames.length - 1)]];
 
-player1.player = 1;
-player2.player = 2;
+const player2 = characters[charactersNames[random(charactersNames.length - 1)]];
 
 const $arenas = document.querySelector('.arenas');
 
@@ -95,8 +88,8 @@ function createElem(tagName, className) {
     return element;
 };
 
-function createPlayer(obj) {
-    const $player = createElem('div', 'player' + obj.player);
+function createPlayer(obj, num) {
+    const $player = createElem('div', 'player' + num);
     const $progressbar = createElem('div', 'progressbar');
     const $character = createElem('div', 'character');
     const $life = createElem('div', 'life');
@@ -117,8 +110,6 @@ function createPlayer(obj) {
 
     return $player;
 };
-
-const random = (num) => Math.ceil(Math.random() * num);
 
 function changeHP(num) {
     this.hp = this.hp > num ? this.hp - num : 0;
@@ -178,8 +169,8 @@ function createReloadButton() {
     return $reloadWrap;
 }
 
-$arenas.appendChild(createPlayer(player1));
-$arenas.appendChild(createPlayer(player2));
+$arenas.appendChild(createPlayer(player1, 1));
+$arenas.appendChild(createPlayer(player2, 2));
 
 function getCurrentTime() {
     const date = new Date();
@@ -259,7 +250,7 @@ function generateLogs(type, player1, player2, currentAttack) {
             result = time + text + attack;
             break;
         case 'draw':
-            result = time + draw;
+            result = time + text;
             break;
         default:
             result = time + text;
