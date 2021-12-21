@@ -1,7 +1,6 @@
-import { random } from './utils.js';
+import { random, $formFight } from './utils.js';
 import { player1, player2 } from './fighters.js';
-
-export const $formFight = document.querySelector('.control');
+import { generateLogs } from './logs.js';
 
 const HIT = {
     head: 30,

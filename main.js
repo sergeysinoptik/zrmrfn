@@ -1,75 +1,15 @@
-import { random, getCurrentTime, createElem } from './utils.js';
+import { random, createReloadButton, disableForm, $formFight } from './utils.js';
 import { createPlayer, player1, player2 } from './fighters.js';
-import { enemyAttack, playerAttack, $formFight, kick } from './attack.js';
+import { enemyAttack, playerAttack, kick } from './attack.js';
 import { generateLogs } from './logs.js';
+import { showResult } from './results.js';
 
 player1.player = 1;
 player2.player = 2;
 
 const $arenas = document.querySelector('.arenas');
-
-
-
-
-
-
-
-
-
-
-
-
-
-function playerWin(name) {
-    const $loseTitle = createElem('div', 'loseTitle');
-    if(!name) {
-        $loseTitle.innerText = 'dead hit';
-    } else {
-        $loseTitle.innerText = name + ' win';
-    }
-    return $loseTitle;
-};
-
-function showResult(player, enemy) {
-    if (player.hp === 0 && enemy.hp > 0) {
-        $arenas.appendChild(playerWin(enemy.name));
-        generateLogs('end', enemy, player);
-    }
-    if (enemy.hp === 0 && player.hp > 0) {
-        $arenas.appendChild(playerWin(player.name));
-        generateLogs('end', player, enemy);
-    }
-    if (enemy.hp === 0 && player.hp === 0) {
-        $arenas.appendChild(playerWin());
-        generateLogs('draw', player, enemy);
-    }
-};
-
-function disableForm(player, enemy) {
-    if (player.hp === 0 || enemy.hp === 0) {
-        $formFight.style.display = 'none';
-        return true;
-    }
-    return false;
-};
-
-function createReloadButton() {
-    const $reloadWrap = createElem('div', 'reloadWrap');
-    const $reloadButton = createElem('button', 'button');
-    $reloadButton.innerText = 'Restart';
-    $reloadWrap.appendChild($reloadButton);
-    $reloadButton.addEventListener('click', function() {
-        window.location.reload();
-    })
-    return $reloadWrap;
-}
-
 $arenas.appendChild(createPlayer(player1, 1));
 $arenas.appendChild(createPlayer(player2, 2));
-
-
-
-
 
 
 
