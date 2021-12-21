@@ -1,4 +1,6 @@
-const characters = {
+import { random, getCurrentTime, createElem } from './utils.js';
+
+const fighters = {
     kitana: {
         name: 'Kitana',
         hp: 100,
@@ -60,13 +62,20 @@ const characters = {
         renderHP: renderHP,
     },
 };
-const random = (num) => Math.ceil(Math.random() * num);
 
-let charactersNames = Object.keys(characters);
+let fightersNames = Object.keys(fighters);
 
-const player1 = characters[charactersNames[random(charactersNames.length - 1)]];
+const player1Name = fightersNames[random(fightersNames.length - 1)];
 
-const player2 = characters[charactersNames[random(charactersNames.length - 1)]];
+fightersNames = fightersNames.filter((i) => i !== player1Name);
+
+const player2Name = fightersNames[random(fightersNames.length - 1)];
+
+const player1 = fighters[player1Name];
+const player2 = fighters[player2Name];
+
+player1.player = 1;
+player2.player = 2;
 
 const $arenas = document.querySelector('.arenas');
 
@@ -79,14 +88,6 @@ const HIT = {
 };
 
 const ATTACK = ['head', 'body', 'foot'];
-
-function createElem(tagName, className) {
-    const element = document.createElement(tagName);
-    if (className) {
-        element.classList.add(className);
-    }
-    return element;
-};
 
 function createPlayer(obj, num) {
     const $player = createElem('div', 'player' + num);
@@ -151,8 +152,7 @@ function showResult(player, enemy) {
 
 function disableForm(player, enemy) {
     if (player.hp === 0 || enemy.hp === 0) {
-        $form = document.querySelector('.control');
-        $form.style.display = 'none';
+        $formFight.style.display = 'none';
         return true;
     }
     return false;
@@ -171,16 +171,6 @@ function createReloadButton() {
 
 $arenas.appendChild(createPlayer(player1, 1));
 $arenas.appendChild(createPlayer(player2, 2));
-
-function getCurrentTime() {
-    const date = new Date();
-
-    const normalize = (num) => (num.toString().length > 1 ? num : `0${num}`);
-
-    const time = `${normalize(date.getHours())}:${normalize(date.getMinutes())}:${normalize(date.getSeconds())}`;
-
-    return time;
-}
 
 const logs = {
     start: 'Часы показывали [time], когда [player1] и [player2] бросили вызов друг другу.',
