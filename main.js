@@ -1,22 +1,51 @@
 import { random, createReloadButton, disableForm } from './utils.js';
-import { createPlayer, player1, player2 } from './fighters.js';
-import { enemyAttack, playerAttack, kick } from './attack.js';
+import { fighters } from './fighters.js';
 import { generateLogs } from './logs.js';
 import { showResult } from './results.js';
+import Player from './player.js';
 
-player1.player = 1;
-player2.player = 2;
+let character = fighters[random(fighters.length - 1)];
+let enemy = fighters[random(fighters.length - 1)];
+
+let player1 = new Player({
+    ...character,
+    player: 1,
+});
+
+let player2 = new Player({
+    ...enemy,
+    player: 2,
+});
+
+console.log(player1, player2)
+
+const kick = (player, enemy) => {
+    if (enemy.hit !== player.defence) {
+        player1.changeHP(enemy.value);
+        generateLogs('hit', player1, player2, enemy.value);
+    }
+    if (enemy.hit === player.defence) {
+        generateLogs('defence', player1, player2);
+    }
+    if (enemy.defence !== player.hit) {
+        player2.changeHP(player.value);
+        generateLogs('hit', player2, player1, player.value);
+    }
+    if (enemy.defence === player.hit) {
+        generateLogs('defence', player2, player1);
+    }
+};
 
 const $arenas = document.querySelector('.arenas');
-$arenas.appendChild(createPlayer(player1, 1));
-$arenas.appendChild(createPlayer(player2, 2));
+$arenas.appendChild(player1.createPlayer());
+$arenas.appendChild(player2.createPlayer());
 
 const $formFight = document.querySelector('.control');
 
 $formFight.addEventListener('submit', function(e) {
     e.preventDefault();
-    const enemy = enemyAttack();
-    const player = playerAttack();
+    const enemy = player2.attack();
+    const player = player1.attack();
     kick(player, enemy);
     player1.renderHP();
     player2.renderHP();

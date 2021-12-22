@@ -40,22 +40,22 @@ const logs = {
     draw: 'Ничья - это тоже победа!'
 };
 
-export function generateLogs(type, player1, player2, currentAttack) {
+export function generateLogs(type, { name: player1Name, hp }, { name: player2Name }, currentAttack) {
     const time = `${getCurrentTime()} `;
-    const attack = ` -${currentAttack}, [${player1.hp}/100]`;
+    const attack = ` -${currentAttack}, [${hp}/100]`;
     let text = '';
     if (type === 'start' || type === 'draw') {
         text = logs[type]
-        .replace('[player1]', player1.name)
-        .replace('[player2]', player2.name)
+        .replace('[player1]', player1Name)
+        .replace('[player2]', player2Name)
         .replace('[time]', time);
     } else {
         text = logs[type][random(logs[type].length) - 1]
-        .replace('[playerKick]', player1.name)
-        .replace('[playerDefence]', player2.name)
+        .replace('[playerKick]', player1Name)
+        .replace('[playerDefence]', player2Name)
         .replace('[time]', time)
-        .replace('[playerWins]', player1.name)
-        .replace('[playerLose]', player2.name);
+        .replace('[playerWins]', player1Name)
+        .replace('[playerLose]', player2Name);
     }
     
     let result = '';
