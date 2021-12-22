@@ -1,6 +1,5 @@
 import { getCurrentTime, random } from './utils.js';
 
-
 const logs = {
     start: 'Часы показывали [time], когда [player1] и [player2] бросили вызов друг другу.',
     end: [
@@ -79,5 +78,3 @@ export function generateLogs(type, player1, player2, currentAttack) {
     const $chat = document.querySelector('.chat');
     $chat.insertAdjacentHTML('afterbegin', el);
 };
-
-

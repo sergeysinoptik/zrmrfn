@@ -1,6 +1,8 @@
-import { random, $formFight } from './utils.js';
+import { random } from './utils.js';
 import { player1, player2 } from './fighters.js';
 import { generateLogs } from './logs.js';
+
+const $formFight = document.querySelector('.control');
 
 const HIT = {
     head: 30,
@@ -13,7 +15,6 @@ const ATTACK = ['head', 'body', 'foot'];
 export const enemyAttack = () => {
     const hit = ATTACK[random(3) - 1];
     const defence = ATTACK[random(3) - 1];
-    
     return {
         value: random(HIT[hit]),
         hit,
@@ -32,8 +33,7 @@ export const playerAttack = () => {
             attack.defence = item.value;
         }
         item.checked = false;
-    }
-    
+    }    
     return attack;
 };
 

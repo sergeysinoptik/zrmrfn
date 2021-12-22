@@ -1,6 +1,6 @@
 export const random = (num) => Math.ceil(Math.random() * num);
 
-export const $formFight = document.querySelector('.control');
+const $formFight = document.querySelector('.control');
 
 export const getCurrentTime = () => {
     const date = new Date();
