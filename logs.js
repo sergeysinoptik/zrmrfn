@@ -1,6 +1,4 @@
-import { getCurrentTime, random } from './utils.js';
-
-const logs = {
+export const logs = {
     start: 'Часы показывали [time], когда [player1] и [player2] бросили вызов друг другу.',
     end: [
         'Результат удара [playerWins]: [playerLose] - труп',
@@ -38,43 +36,4 @@ const logs = {
         '[playerKick] обманулся и жестокий [playerDefence] блокировал удар стопой в солнечное сплетение.'
     ],
     draw: 'Ничья - это тоже победа!'
-};
-
-export function generateLogs(type, { name: player1Name, hp }, { name: player2Name }, currentAttack) {
-    const time = `${getCurrentTime()} `;
-    const attack = ` -${currentAttack}, [${hp}/100]`;
-    let text = '';
-    if (type === 'start' || type === 'draw') {
-        text = logs[type]
-        .replace('[player1]', player1Name)
-        .replace('[player2]', player2Name)
-        .replace('[time]', time);
-    } else {
-        text = logs[type][random(logs[type].length) - 1]
-        .replace('[playerKick]', player1Name)
-        .replace('[playerDefence]', player2Name)
-        .replace('[time]', time)
-        .replace('[playerWins]', player1Name)
-        .replace('[playerLose]', player2Name);
-    }
-    
-    let result = '';
-
-    switch (type) {
-        case 'start':
-            result = text;
-            break;
-        case 'hit':
-            result = time + text + attack;
-            break;
-        case 'draw':
-            result = time + text;
-            break;
-        default:
-            result = time + text;
-    };
-
-    const el = `<p>${result}</p>`;
-    const $chat = document.querySelector('.chat');
-    $chat.insertAdjacentHTML('afterbegin', el);
 };

@@ -24,4 +24,9 @@ export const fighters = [
         hp: 100,
         img: 'http://reactmarathon-api.herokuapp.com/assets/scorpion.gif',
     },
+    {
+        name: 'Kung Lao',
+        hp: 100,
+        img: 'https://ic.pics.livejournal.com/sly2m/9519071/376885/376885_original.gif',
+    },
 ];

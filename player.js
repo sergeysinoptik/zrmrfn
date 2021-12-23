@@ -1,4 +1,3 @@
-
 import { random, createElem } from './utils.js';
 class Constantes {
     constructor(name) {
@@ -19,9 +18,6 @@ class Player extends Constantes {
         this.name = name;
         this.hp = hp;
         this.img = img;
-    }
-    whoop = () => {
-        console.log(`${this.name} let's fight!`);
     }
     changeHP = (num) => {
         this.hp = this.hp > num ? this.hp - num : 0;
@@ -52,7 +48,6 @@ class Player extends Constantes {
     
         $player.appendChild($progressbar);
         $player.appendChild($character);
-    
         return $player;
     }
     attack = () => {
