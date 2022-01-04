@@ -1,9 +1,8 @@
-import { random, createElem } from './utils.js';
-
+import { createElem } from './utils.js';
 class Constantes {
-    constructor(name) {
-        this.player = name;
-    };
+    constructor(num) {
+        this.player = num;
+    }
 };
 
 class Player extends Constantes {
@@ -13,19 +12,19 @@ class Player extends Constantes {
         this.name = name;
         this.hp = hp;
         this.img = img;
-    };
+        this.formFight = document.querySelector('.control');
+    }
     changeHP = (num) => {
         this.hp = this.hp > num ? this.hp - num : 0;
-    };
+    }
     elHP = () => {
         return document.querySelector(`.player${this.player} .life`);
-    };
+    }
     renderHP = () => {
         let $playerLife = this.elHP();
         $playerLife.style.width = `${this.hp}%`;
-    };
+    }
     createPlayer = () => {
-        const $arenas = document.querySelector('.arenas');
         const $player = createElem('div', `player${this.player}`);
         const $progressbar = createElem('div', 'progressbar');
         const $character = createElem('div', 'character');
@@ -44,9 +43,8 @@ class Player extends Constantes {
     
         $player.appendChild($progressbar);
         $player.appendChild($character);
-        $arenas.appendChild($player);
         return $player;
-    };
+    }
 };
 
 export default Player;

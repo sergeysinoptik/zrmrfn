@@ -2,11 +2,13 @@ import Player from "./player.js";
 import { createElem, random, getCurrentTime } from "./utils.js";
 import { logs } from './logs.js';
 
-let player1;
-let player2;
 class Game {
-    $arenas = document.querySelector('.arenas');
-    $formFight = document.querySelector('.control');
+    constructor({ arenas, formFight }) {
+        this.arenas = arenas;
+        this.formFight = formFight;
+        this.player1 = this.getPlayer(1);
+        this.player2 = this.getPlayer(2);
+    }
     getPlayers = async () => {
         const body = fetch('https://reactmarathon-api.herokuapp.com/api/mk/players').then(res => res.json());
         return body;
@@ -22,10 +24,18 @@ class Game {
         }).then(res => res.json());
         return a;
     };
+    getPlayer = async (num) => {
+        const players = await this.getPlayers();
+        const p = players[random(players.length - 1)];
+        const player = new Player({
+            ...p,
+            player: num,
+        });
+        return player;
+    }
     attack = async () => {
-        const $formFight = document.querySelector('.control');
         const attack = {};
-        for (let item of $formFight) {
+        for (let item of this.formFight) {
             if (item.checked && item.name === 'hit') {
                 attack.hit = item.value;
             }
@@ -38,33 +48,24 @@ class Game {
         return a;
     };
     start = async () => {
-        const players = await this.getPlayers();
-        const p1 = players[random(players.length - 1)];
-        const p2 = await this.getRandomPlayer();
-        player1 = new Player({
-            ...p1,
-            player: 1,
-        });
-        player2 = new Player({
-            ...p2,
-            player: 2,
-        });
-        player1.createPlayer();
-        player2.createPlayer();
-        
-        const disableForm = () => this.disableForm(player1, player2);
-        const kick = () => this.kick();
-        
-        this.$formFight.addEventListener('submit', function(e) {
-            e.preventDefault();
-            kick();
-            disableForm();
-        })
+        const player1 = await this.player1;
+        const player2 = await this.player2;
 
-        document.onload = this.$arenas.classList.add('arena' + random(4));
+        this.arenas.appendChild(player1.createPlayer());
+        this.arenas.appendChild(player2.createPlayer());
+        
+        document.onload = this.arenas.classList.add('arena' + random(4));
         document.onload = this.generateLogs('start', player1, player2);
     };
-    kick = async () => {
+    addEvent = async () => {
+            const player = await this.player1;
+            const enemy = await this.player2;
+            
+            this.kick(player, enemy);
+            
+            this.disableForm(this.player1, this.player2);
+    }
+    kick = async (player1, player2) => {
         const attack = await this.attack();
         const { player1: player, player2: enemy } = attack;
 
@@ -147,24 +148,24 @@ class Game {
     };
     showResult = (player, enemy) => {
         if (player.hp === 0 && enemy.hp > 0) {
-            this.$arenas.appendChild(this.playerWin(enemy.name));
+            this.arenas.appendChild(this.playerWin(enemy.name));
             this.generateLogs('end', enemy, player);
         }
         if (enemy.hp === 0 && player.hp > 0) {
-            this.$arenas.appendChild(this.playerWin(player.name));
+            this.arenas.appendChild(this.playerWin(player.name));
             this.generateLogs('end', player, enemy);
         }
         if (enemy.hp === 0 && player.hp === 0) {
-            this.$arenas.appendChild(this.playerWin());
+            this.arenas.appendChild(this.playerWin());
             this.generateLogs('draw', player, enemy);
         }
         if (this.disableForm(player, enemy)) {
-            this.$arenas.appendChild(this.createReloadButton());
+            this.arenas.appendChild(this.createReloadButton());
         };
     };
     disableForm = (player, enemy) => {
         if (player.hp === 0 || enemy.hp === 0) {
-            this.$formFight.style.display = 'none';
+            this.formFight.style.display = 'none';
             return true;
         }
         return false;
