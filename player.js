@@ -1,7 +1,7 @@
 import { random, createElem } from './utils.js';
 class Constantes {
-    constructor(name) {
-        this.player = name;
+    constructor(num) {
+        this.player = num;
     }
     HIT = {
         head: 30,
@@ -18,6 +18,7 @@ class Player extends Constantes {
         this.name = name;
         this.hp = hp;
         this.img = img;
+        this.formFight = document.querySelector('.control');
     }
     changeHP = (num) => {
         this.hp = this.hp > num ? this.hp - num : 0;
@@ -52,9 +53,8 @@ class Player extends Constantes {
     }
     attack = () => {
         if (this.player === 1) {
-            const $formFight = document.querySelector('.control');
             const attack = {};
-            for (let item of $formFight) {
+            for (let item of this.formFight) {
                 if (item.checked && item.name === 'hit') {
                     attack.value = random(this.HIT[item.value]);
                     attack.hit = item.value;

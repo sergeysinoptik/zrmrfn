@@ -1,5 +1,16 @@
 import Game from './game.js';
 
-const game = new Game();
+const $arenas = document.querySelector('.arenas');
+const $formFight = document.querySelector('.control');
+
+const game = new Game({
+    arenas: $arenas,
+    formFight: $formFight,
+});
 
 game.start();
+
+$formFight.addEventListener('submit', function(e) {
+    e.preventDefault();
+    game.addEvent();
+});
