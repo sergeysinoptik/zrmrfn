@@ -1,14 +1,8 @@
-import { random, createElem } from './utils.js';
+import { createElem } from './utils.js';
 class Constantes {
     constructor(num) {
         this.player = num;
     }
-    HIT = {
-        head: 30,
-        body: 25,
-        foot: 20,
-    }
-    ATTACK = ['head', 'body', 'foot'];
 };
 
 class Player extends Constantes {
@@ -50,30 +44,6 @@ class Player extends Constantes {
         $player.appendChild($progressbar);
         $player.appendChild($character);
         return $player;
-    }
-    attack = () => {
-        if (this.player === 1) {
-            const attack = {};
-            for (let item of this.formFight) {
-                if (item.checked && item.name === 'hit') {
-                    attack.value = random(this.HIT[item.value]);
-                    attack.hit = item.value;
-                }
-                if (item.checked && item.name === 'defence') {
-                    attack.defence = item.value;
-                }
-                item.checked = false;
-            }    
-            return attack;
-        } else {
-            const hit = this.ATTACK[random(3) - 1];
-            const defence = this.ATTACK[random(3) - 1];
-            return {
-                value: random(this.HIT[hit]),
-                hit,
-                defence,
-            }
-        }  
     }
 };
 

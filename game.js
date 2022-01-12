@@ -1,55 +1,93 @@
 import Player from "./player.js";
 import { createElem, random, getCurrentTime } from "./utils.js";
-import { fighters } from './fighters.js';
 import { logs } from './logs.js';
 
 class Game {
     constructor({ arenas, formFight }) {
         this.arenas = arenas;
         this.formFight = formFight;
-        this.player1 = this.createCharacter(1);
-        this.player2 = this.createCharacter(2);
+        this.player1 = this.getPlayer(1);
+        this.player2 = this.getPlayer(2);
     }
-    createCharacter = (num) => {
-        const character = fighters[random(fighters.length - 1)];
+    getPlayers = async () => {
+        const body = fetch('https://reactmarathon-api.herokuapp.com/api/mk/players').then(res => res.json());
+        return body;
+    };
+    getRandomPlayer = async () => {
+        const body = fetch('https://reactmarathon-api.herokuapp.com/api/mk/player/choose').then(res => res.json());
+        return body;
+    };
+    getAttack = async (attack) => {
+        const a = fetch('https://reactmarathon-api.herokuapp.com/api/mk/player/fight', {
+            method: 'POST',
+            body: JSON.stringify(attack),
+        }).then(res => res.json());
+        return a;
+    };
+    getPlayer = async (num) => {
+        const players = await this.getPlayers();
+        const p = players[random(players.length - 1)];
         const player = new Player({
-            ...character,
+            ...p,
             player: num,
         });
-        this.arenas.appendChild(player.createPlayer());
         return player;
     }
-    start = () => {
+    attack = async () => {
+        const attack = {};
+        for (let item of this.formFight) {
+            if (item.checked && item.name === 'hit') {
+                attack.hit = item.value;
+            }
+            if (item.checked && item.name === 'defence') {
+                attack.defence = item.value;
+            }
+            item.checked = false;
+        } 
+        const a = await this.getAttack(attack);
+        return a;
+    };
+    start = async () => {
+        const player1 = await this.player1;
+        const player2 = await this.player2;
+
+        this.arenas.appendChild(player1.createPlayer());
+        this.arenas.appendChild(player2.createPlayer());
+        
         document.onload = this.arenas.classList.add('arena' + random(4));
-        document.onload = this.generateLogs('start', this.player1, this.player2);
-    }
-    addEvent = () => {
-            const player = this.player1.attack();
-            const enemy = this.player2.attack();
+        document.onload = this.generateLogs('start', player1, player2);
+    };
+    addEvent = async () => {
+            const player = await this.player1;
+            const enemy = await this.player2;
             
             this.kick(player, enemy);
             
-            this.player1.renderHP();
-            this.player2.renderHP();
-            
             this.disableForm(this.player1, this.player2);
-            this.showResult(this.player1, this.player2);
     }
-    kick = (player, enemy) => {
+    kick = async (player1, player2) => {
+        const attack = await this.attack();
+        const { player1: player, player2: enemy } = attack;
+
         if (enemy.hit !== player.defence) {
-            this.player1.changeHP(enemy.value);
-            this.generateLogs('hit', this.player1, this.player2, enemy.value);
+            player1.changeHP(enemy.value);
+            this.generateLogs('hit', player2, player1, enemy.value);
         }
         if (enemy.hit === player.defence) {
-            this.generateLogs('defence', this.player1, this.player2);
+            this.generateLogs('defence', player2, player1);
         }
         if (enemy.defence !== player.hit) {
-            this.player2.changeHP(player.value);
-            this.generateLogs('hit', this.player2, this.player1, player.value);
+            player2.changeHP(player.value);
+            this.generateLogs('hit', player1, player2, player.value);
         }
         if (enemy.defence === player.hit) {
-            this.generateLogs('defence', this.player2, this.player1);
+            this.generateLogs('defence', player1, player2);
         }
+        
+        player1.renderHP();
+        player2.renderHP();
+
+        this.showResult(player1, player2);
     };
     playerWin = (name) => {
         const $winMessage = createElem('div', 'win-message');
@@ -60,7 +98,7 @@ class Game {
         }
         return $winMessage;
     };
-    generateLogs = (type, { name: player1Name, hp }, { name: player2Name }, currentAttack) => {
+    generateLogs = (type, { name: player1Name }, { name: player2Name, hp }, currentAttack) => {
         const time = `${getCurrentTime()} `;
         const attack = ` -${currentAttack}, [${hp}/100]`;
         let text = '';
